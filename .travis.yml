@@ -14,4 +14,4 @@ before_script:
   - php artisan migrate --seed --no-interaction
 
 script:
-  - php artisan test
+  - php artisan test --env=testing
