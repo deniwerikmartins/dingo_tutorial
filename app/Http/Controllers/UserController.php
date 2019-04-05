@@ -7,6 +7,7 @@ use App\Http\Transformers\UserTransformer;
 use App\Models\User;
 use App\Services\UserService;
 use Illuminate\Http\Request;
+use Cache;
 
 class UserController extends Controller
 {
@@ -30,9 +31,25 @@ class UserController extends Controller
     }*/
     public function index()
     {
-        $users = User::paginate(10);
 
-        return $this->response->paginator($users, new UserTransformer());
+        $key = "laravel::User";
+
+        $time = 30;
+
+
+
+        //return $users;
+
+        $usersCache = Cache::remember($key,$time, function (){
+            $users = User::get();
+           return $users;
+        });
+
+        return $usersCache;
+
+
+
+        //return $this->response->paginator($users, new UserTransformer());
     }
 
 

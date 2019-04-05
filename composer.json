@@ -14,11 +14,13 @@
         "laravel/framework": "5.5.*",
         "laravel/tinker": "~1.0",
         "mpociot/laravel-apidoc-generator": "dev-master",
+        "predis/predis": "^2.0@dev",
         "santigarcor/laratrust": "5.0.*",
         "tymon/jwt-auth": "1.0.0-rc.2"
     },
     "require-dev": {
         "ext-json": "*",
+        "barryvdh/laravel-debugbar": "^3.2@dev",
         "barryvdh/laravel-ide-helper": "^2.6@dev",
         "filp/whoops": "~2.0",
         "fzaninotto/faker": "~1.4",
