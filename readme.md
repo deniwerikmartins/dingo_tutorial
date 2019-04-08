@@ -1,3 +1,164 @@
+Terminal recomendado: PowerShell
+#Setup
+
+Para preparar o projeto clone o repositório em: https://github.com/deniwerikmartins/dingo_tutorial.git
+
+Na raiz do projeto crie um arquivo `.env` com a seguinte configuração:
+
+`APP_NAME=Laravel`
+
+`APP_ENV=local`
+
+`APP_KEY=base64:{APP_KEY}`
+
+`APP_DEBUG=true`
+
+`APP_LOG_LEVEL=debug`
+
+`APP_URL=http://localhost`
+
+`DB_CONNECTION=mysql`
+
+`DB_HOST=mysql`
+
+`DB_PORT=3306`
+
+`DB_DATABASE=dingo_tutorial`
+
+`DB_USERNAME=root`
+
+`DB_PASSWORD=root`
+
+`BROADCAST_DRIVER=log`
+
+`CACHE_DRIVER=redis`
+
+`SESSION_DRIVER=redis`
+
+`SESSION_LIFETIME=120`
+
+`QUEUE_DRIVER=sync`
+
+`REDIS_HOST=redis`
+
+`REDIS_PASSWORD=null`
+
+`REDIS_PORT=6379`
+
+`MAIL_DRIVER=smtp`
+
+`MAIL_HOST=smtp.mailtrap.io`
+
+`MAIL_PORT=2525`
+
+`MAIL_USERNAME=null`
+
+`MAIL_PASSWORD=null`
+
+`MAIL_ENCRYPTION=null`
+
+`PUSHER_APP_ID=`
+
+`PUSHER_APP_KEY=`
+
+`PUSHER_APP_SECRET=`
+
+`PUSHER_APP_CLUSTER=mt1`
+
+`OPENWEATHERMAP_APIKEY=82f4f58ba2d5f4ee6c13b4fee921c903`
+
+`APIXU_APIKEY=31b315e6216344aea1132112190204`
+
+`JWT_SECRET={JWT_SECRET}`
+
+Obs: APP_KEY pode ser gerada com o comando no terminal: `php artisan key:generate`
+
+Obs2: JWT_SECRET pode ser gerada com o comando no terminal: `php artisan jwt:secret`
+
+Entre no diretório laradock, faça uma cópia do arquivo `env-example`, cole e o renomeie para `.env`
+
+No diretório laradock/mysql edite o arquivo `my.cf`  e adicione a linha ao final de [mysqld]:
+
+`default_authentication_plugin=mysql_native_password`
+
+Execute o comando docker no terminal para iniciar os containers:
+
+`docker-compose up -d nginx mysql phpmyadmin redis workspace`
+
+No terminal vá até o diretório do projeto, entre no diretorio laradock e inicie o mysql no terminal com o comando:
+
+`docker-compose exec mysql bash`
+
+Entre na linha de comandos do mysql:
+
+`mysql -u root -p`
+
+Faça login como root (usuario e senha root)
+
+Execute os comandos:
+
+`ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'root';`
+
+`ALTER USER 'root'@'%' IDENTIFIED WITH mysql_native_password BY 'root';`
+
+`ALTER USER 'default'@'%' IDENTIFIED WITH mysql_native_password BY 'secret';`
+
+
+`` CREATE DATABASE IF NOT EXISTS `dingo_tutorial` COLLATE 'utf8_general_ci' ; ``
+
+`` GRANT ALL ON `dingo_tutorial`.* TO 'root'@'%' ; ``
+
+`FLUSH PRIVILEGES ;`
+
+Execute o comando exit para sair do mysql e voltar para o bash, então execute os comandos:
+
+`composer update`
+
+`composer dump-autoload`
+
+`php artisan jwt:secret`
+
+`php artisan migrate`
+
+`php artisan migrate --seed`
+
+`php artisan vendor:publish --provider="Dingo\Api\Provider\LaravelServiceProvider"`
+
+
+#Test
+
+Inicialmente crie um arquivo `.env.testing` na raiz do projeto com a seguinte configuração
+
+`APP_ENV=testing`
+
+`APP_DEBUG=true`
+
+`APP_KEY=base64:{APP_KEY}`  
+
+`DB_CONNECTION=sqlite`
+
+`DB_DATABASE=testing.sqlite`
+
+`CACHE_DRIVER=file`
+
+`QUEUE_DRIVER=sync`
+
+`JWT_SECRET={JWT_SECRET}`
+
+
+Obs: APP_KEY pode ser gerada com o comando: `php artisan key:generate`
+
+Para executar os testes unitários, uma vez que iniciado o container workspace, inicie o bash com o comando:
+
+`docker exec -it {CONTAINER_ID} bash`
+
+Obs: CONTAINER_ID pode ser verificado com o comando `docker container ls` e usado somente os 3 primeiros caracteres,
+exemplo: `docker exec -it c73 bash`
+
+Execute o comando `php artisan test` 
+
+#Run
+
 ---
 title: API Reference
 
@@ -102,6 +263,14 @@ fetch(url, {
 <!-- END_bc42578cdf9b64994335abfd8eb8d0ce -->
 
 <!-- START_ab8fae5a5a7e9d9fd9719629c9897bc3 -->
+
+# Cidades disponivies para recursos de wheater da api:
+`Paris`
+
+`Washington`
+
+`London`
+
 ## /api/weather/city/{city}/current
 > Example request:
 
@@ -125,82 +294,23 @@ fetch(url, {
     .then(json => console.log(json));
 ```
 
-> Example response (404):
+> Example response (200):
 
 ```json
 {
-    "message": "Unknown city",
-    "status_code": 404,
-    "debug": {
-        "line": 14,
-        "file": "C:\\wamp64\\www\\dingo_tutorial\\app\\Http\\Controllers\\QueryController.php",
-        "class": "Symfony\\Component\\HttpKernel\\Exception\\NotFoundHttpException",
-        "trace": [
-            "#0 [internal function]: App\\Http\\Controllers\\QueryController->current(NULL)",
-            "#1 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Controller.php(54): call_user_func_array(Array, Array)",
-            "#2 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\ControllerDispatcher.php(45): Illuminate\\Routing\\Controller->callAction('current', Array)",
-            "#3 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(212): Illuminate\\Routing\\ControllerDispatcher->dispatch(Object(Illuminate\\Routing\\Route), Object(App\\Http\\Controllers\\QueryController), 'current')",
-            "#4 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(169): Illuminate\\Routing\\Route->runController()",
-            "#5 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(658): Illuminate\\Routing\\Route->run()",
-            "#6 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Pipeline.php(30): Illuminate\\Routing\\Router->Illuminate\\Routing\\{closure}(Object(Dingo\\Api\\Http\\Request))",
-            "#7 C:\\wamp64\\www\\dingo_tutorial\\vendor\\dingo\\api\\src\\Http\\Middleware\\PrepareController.php(45): Illuminate\\Routing\\Pipeline->Illuminate\\Routing\\{closure}(Object(Dingo\\Api\\Http\\Request))",
-            "#8 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(149): Dingo\\Api\\Http\\Middleware\\PrepareController->handle(Object(Dingo\\Api\\Http\\Request), Object(Closure))",
-            "#9 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Pipeline.php(53): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Dingo\\Api\\Http\\Request))",
-            "#10 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(102): Illuminate\\Routing\\Pipeline->Illuminate\\Routing\\{closure}(Object(Dingo\\Api\\Http\\Request))",
-            "#11 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(660): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))",
-            "#12 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(635): Illuminate\\Routing\\Router->runRouteWithinStack(Object(Illuminate\\Routing\\Route), Object(Dingo\\Api\\Http\\Request))",
-            "#13 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(601): Illuminate\\Routing\\Router->runRoute(Object(Dingo\\Api\\Http\\Request), Object(Illuminate\\Routing\\Route))",
-            "#14 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(590): Illuminate\\Routing\\Router->dispatchToRoute(Object(Dingo\\Api\\Http\\Request))",
-            "#15 C:\\wamp64\\www\\dingo_tutorial\\vendor\\dingo\\api\\src\\Routing\\Adapter\\Laravel.php(88): Illuminate\\Routing\\Router->dispatch(Object(Dingo\\Api\\Http\\Request))",
-            "#16 C:\\wamp64\\www\\dingo_tutorial\\vendor\\dingo\\api\\src\\Routing\\Router.php(514): Dingo\\Api\\Routing\\Adapter\\Laravel->dispatch(Object(Dingo\\Api\\Http\\Request), 'v1')",
-            "#17 C:\\wamp64\\www\\dingo_tutorial\\vendor\\dingo\\api\\src\\Http\\Middleware\\Request.php(126): Dingo\\Api\\Routing\\Router->dispatch(Object(Dingo\\Api\\Http\\Request))",
-            "#18 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(114): Dingo\\Api\\Http\\Middleware\\Request->Dingo\\Api\\Http\\Middleware\\{closure}(Object(Dingo\\Api\\Http\\Request))",
-            "#19 C:\\wamp64\\www\\dingo_tutorial\\vendor\\fideloper\\proxy\\src\\TrustProxies.php(56): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Dingo\\Api\\Http\\Request))",
-            "#20 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(149): Fideloper\\Proxy\\TrustProxies->handle(Object(Dingo\\Api\\Http\\Request), Object(Closure))",
-            "#21 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(30): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Dingo\\Api\\Http\\Request))",
-            "#22 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(149): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Dingo\\Api\\Http\\Request), Object(Closure))",
-            "#23 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(30): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Dingo\\Api\\Http\\Request))",
-            "#24 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(149): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Dingo\\Api\\Http\\Request), Object(Closure))",
-            "#25 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Dingo\\Api\\Http\\Request))",
-            "#26 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(149): Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize->handle(Object(Dingo\\Api\\Http\\Request), Object(Closure))",
-            "#27 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\CheckForMaintenanceMode.php(46): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Dingo\\Api\\Http\\Request))",
-            "#28 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(149): Illuminate\\Foundation\\Http\\Middleware\\CheckForMaintenanceMode->handle(Object(Dingo\\Api\\Http\\Request), Object(Closure))",
-            "#29 C:\\wamp64\\www\\dingo_tutorial\\vendor\\barryvdh\\laravel-cors\\src\\HandlePreflight.php(29): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Dingo\\Api\\Http\\Request))",
-            "#30 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(149): Barryvdh\\Cors\\HandlePreflight->handle(Object(Dingo\\Api\\Http\\Request), Object(Closure))",
-            "#31 C:\\wamp64\\www\\dingo_tutorial\\vendor\\barryvdh\\laravel-cors\\src\\HandleCors.php(36): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Dingo\\Api\\Http\\Request))",
-            "#32 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(149): Barryvdh\\Cors\\HandleCors->handle(Object(Dingo\\Api\\Http\\Request), Object(Closure))",
-            "#33 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(102): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Dingo\\Api\\Http\\Request))",
-            "#34 C:\\wamp64\\www\\dingo_tutorial\\vendor\\dingo\\api\\src\\Http\\Middleware\\Request.php(127): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))",
-            "#35 C:\\wamp64\\www\\dingo_tutorial\\vendor\\dingo\\api\\src\\Http\\Middleware\\Request.php(103): Dingo\\Api\\Http\\Middleware\\Request->sendRequestThroughRouter(Object(Dingo\\Api\\Http\\Request))",
-            "#36 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(149): Dingo\\Api\\Http\\Middleware\\Request->handle(Object(Dingo\\Api\\Http\\Request), Object(Closure))",
-            "#37 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Pipeline.php(53): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))",
-            "#38 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(102): Illuminate\\Routing\\Pipeline->Illuminate\\Routing\\{closure}(Object(Illuminate\\Http\\Request))",
-            "#39 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(151): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))",
-            "#40 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(116): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))",
-            "#41 C:\\wamp64\\www\\dingo_tutorial\\vendor\\mpociot\\laravel-apidoc-generator\\src\\Tools\\ResponseStrategies\\ResponseCallStrategy.php(276): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))",
-            "#42 C:\\wamp64\\www\\dingo_tutorial\\vendor\\mpociot\\laravel-apidoc-generator\\src\\Tools\\ResponseStrategies\\ResponseCallStrategy.php(260): Mpociot\\ApiDoc\\Tools\\ResponseStrategies\\ResponseCallStrategy->callLaravelRoute(Object(Illuminate\\Http\\Request))",
-            "#43 C:\\wamp64\\www\\dingo_tutorial\\vendor\\mpociot\\laravel-apidoc-generator\\src\\Tools\\ResponseStrategies\\ResponseCallStrategy.php(36): Mpociot\\ApiDoc\\Tools\\ResponseStrategies\\ResponseCallStrategy->makeApiCall(Object(Illuminate\\Http\\Request))",
-            "#44 C:\\wamp64\\www\\dingo_tutorial\\vendor\\mpociot\\laravel-apidoc-generator\\src\\Tools\\ResponseResolver.php(49): Mpociot\\ApiDoc\\Tools\\ResponseStrategies\\ResponseCallStrategy->__invoke(Object(Dingo\\Api\\Routing\\Route), Array, Array)",
-            "#45 C:\\wamp64\\www\\dingo_tutorial\\vendor\\mpociot\\laravel-apidoc-generator\\src\\Tools\\ResponseResolver.php(68): Mpociot\\ApiDoc\\Tools\\ResponseResolver->resolve(Array, Array)",
-            "#46 C:\\wamp64\\www\\dingo_tutorial\\vendor\\mpociot\\laravel-apidoc-generator\\src\\Tools\\Generator.php(57): Mpociot\\ApiDoc\\Tools\\ResponseResolver::getResponse(Object(Dingo\\Api\\Routing\\Route), Array, Array)",
-            "#47 C:\\wamp64\\www\\dingo_tutorial\\vendor\\mpociot\\laravel-apidoc-generator\\src\\Commands\\GenerateDocumentation.php(201): Mpociot\\ApiDoc\\Tools\\Generator->processRoute(Object(Dingo\\Api\\Routing\\Route), Array)",
-            "#48 C:\\wamp64\\www\\dingo_tutorial\\vendor\\mpociot\\laravel-apidoc-generator\\src\\Commands\\GenerateDocumentation.php(59): Mpociot\\ApiDoc\\Commands\\GenerateDocumentation->processRoutes(Object(Mpociot\\ApiDoc\\Tools\\Generator), Array)",
-            "#49 [internal function]: Mpociot\\ApiDoc\\Commands\\GenerateDocumentation->handle()",
-            "#50 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(29): call_user_func_array(Array, Array)",
-            "#51 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(87): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()",
-            "#52 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(31): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))",
-            "#53 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(549): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)",
-            "#54 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(183): Illuminate\\Container\\Container->call(Array)",
-            "#55 C:\\wamp64\\www\\dingo_tutorial\\vendor\\symfony\\console\\Command\\Command.php(255): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))",
-            "#56 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(170): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))",
-            "#57 C:\\wamp64\\www\\dingo_tutorial\\vendor\\symfony\\console\\Application.php(960): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))",
-            "#58 C:\\wamp64\\www\\dingo_tutorial\\vendor\\symfony\\console\\Application.php(255): Symfony\\Component\\Console\\Application->doRunCommand(Object(Mpociot\\ApiDoc\\Commands\\GenerateDocumentation), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))",
-            "#59 C:\\wamp64\\www\\dingo_tutorial\\vendor\\symfony\\console\\Application.php(148): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))",
-            "#60 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Application.php(88): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))",
-            "#61 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(121): Illuminate\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))",
-            "#62 C:\\wamp64\\www\\dingo_tutorial\\artisan(37): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))",
-            "#63 {main}"
-        ]
+    "data": {
+        "id": 1,
+        "city_id": 1,
+        "city_name": "London",
+        "temp_celsius": null,
+        "status": "Haze",
+        "measurement_time": "2019-04-07 22:57:22",
+        "provider": "openweathermap.org",
+        "created_at": {
+            "date": "2019-04-07 22:58:54.000000",
+            "timezone_type": 3,
+            "timezone": "UTC"
+        }
     }
 }
 ```
@@ -235,83 +345,40 @@ fetch(url, {
     .then(json => console.log(json));
 ```
 
-> Example response (404):
+> Example response (200):
 
 ```json
 {
-    "message": "Unknown city",
-    "status_code": 404,
-    "debug": {
-        "line": 22,
-        "file": "C:\\wamp64\\www\\dingo_tutorial\\app\\Http\\Controllers\\QueryController.php",
-        "class": "Symfony\\Component\\HttpKernel\\Exception\\NotFoundHttpException",
-        "trace": [
-            "#0 [internal function]: App\\Http\\Controllers\\QueryController->all(NULL)",
-            "#1 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Controller.php(54): call_user_func_array(Array, Array)",
-            "#2 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\ControllerDispatcher.php(45): Illuminate\\Routing\\Controller->callAction('all', Array)",
-            "#3 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(212): Illuminate\\Routing\\ControllerDispatcher->dispatch(Object(Illuminate\\Routing\\Route), Object(App\\Http\\Controllers\\QueryController), 'all')",
-            "#4 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Route.php(169): Illuminate\\Routing\\Route->runController()",
-            "#5 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(658): Illuminate\\Routing\\Route->run()",
-            "#6 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Pipeline.php(30): Illuminate\\Routing\\Router->Illuminate\\Routing\\{closure}(Object(Dingo\\Api\\Http\\Request))",
-            "#7 C:\\wamp64\\www\\dingo_tutorial\\vendor\\dingo\\api\\src\\Http\\Middleware\\PrepareController.php(45): Illuminate\\Routing\\Pipeline->Illuminate\\Routing\\{closure}(Object(Dingo\\Api\\Http\\Request))",
-            "#8 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(149): Dingo\\Api\\Http\\Middleware\\PrepareController->handle(Object(Dingo\\Api\\Http\\Request), Object(Closure))",
-            "#9 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Pipeline.php(53): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Dingo\\Api\\Http\\Request))",
-            "#10 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(102): Illuminate\\Routing\\Pipeline->Illuminate\\Routing\\{closure}(Object(Dingo\\Api\\Http\\Request))",
-            "#11 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(660): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))",
-            "#12 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(635): Illuminate\\Routing\\Router->runRouteWithinStack(Object(Illuminate\\Routing\\Route), Object(Dingo\\Api\\Http\\Request))",
-            "#13 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(601): Illuminate\\Routing\\Router->runRoute(Object(Dingo\\Api\\Http\\Request), Object(Illuminate\\Routing\\Route))",
-            "#14 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(590): Illuminate\\Routing\\Router->dispatchToRoute(Object(Dingo\\Api\\Http\\Request))",
-            "#15 C:\\wamp64\\www\\dingo_tutorial\\vendor\\dingo\\api\\src\\Routing\\Adapter\\Laravel.php(88): Illuminate\\Routing\\Router->dispatch(Object(Dingo\\Api\\Http\\Request))",
-            "#16 C:\\wamp64\\www\\dingo_tutorial\\vendor\\dingo\\api\\src\\Routing\\Router.php(514): Dingo\\Api\\Routing\\Adapter\\Laravel->dispatch(Object(Dingo\\Api\\Http\\Request), 'v1')",
-            "#17 C:\\wamp64\\www\\dingo_tutorial\\vendor\\dingo\\api\\src\\Http\\Middleware\\Request.php(126): Dingo\\Api\\Routing\\Router->dispatch(Object(Dingo\\Api\\Http\\Request))",
-            "#18 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(114): Dingo\\Api\\Http\\Middleware\\Request->Dingo\\Api\\Http\\Middleware\\{closure}(Object(Dingo\\Api\\Http\\Request))",
-            "#19 C:\\wamp64\\www\\dingo_tutorial\\vendor\\fideloper\\proxy\\src\\TrustProxies.php(56): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Dingo\\Api\\Http\\Request))",
-            "#20 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(149): Fideloper\\Proxy\\TrustProxies->handle(Object(Dingo\\Api\\Http\\Request), Object(Closure))",
-            "#21 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(30): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Dingo\\Api\\Http\\Request))",
-            "#22 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(149): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Dingo\\Api\\Http\\Request), Object(Closure))",
-            "#23 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(30): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Dingo\\Api\\Http\\Request))",
-            "#24 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(149): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Dingo\\Api\\Http\\Request), Object(Closure))",
-            "#25 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Dingo\\Api\\Http\\Request))",
-            "#26 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(149): Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize->handle(Object(Dingo\\Api\\Http\\Request), Object(Closure))",
-            "#27 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\CheckForMaintenanceMode.php(46): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Dingo\\Api\\Http\\Request))",
-            "#28 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(149): Illuminate\\Foundation\\Http\\Middleware\\CheckForMaintenanceMode->handle(Object(Dingo\\Api\\Http\\Request), Object(Closure))",
-            "#29 C:\\wamp64\\www\\dingo_tutorial\\vendor\\barryvdh\\laravel-cors\\src\\HandlePreflight.php(29): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Dingo\\Api\\Http\\Request))",
-            "#30 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(149): Barryvdh\\Cors\\HandlePreflight->handle(Object(Dingo\\Api\\Http\\Request), Object(Closure))",
-            "#31 C:\\wamp64\\www\\dingo_tutorial\\vendor\\barryvdh\\laravel-cors\\src\\HandleCors.php(36): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Dingo\\Api\\Http\\Request))",
-            "#32 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(149): Barryvdh\\Cors\\HandleCors->handle(Object(Dingo\\Api\\Http\\Request), Object(Closure))",
-            "#33 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(102): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Dingo\\Api\\Http\\Request))",
-            "#34 C:\\wamp64\\www\\dingo_tutorial\\vendor\\dingo\\api\\src\\Http\\Middleware\\Request.php(127): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))",
-            "#35 C:\\wamp64\\www\\dingo_tutorial\\vendor\\dingo\\api\\src\\Http\\Middleware\\Request.php(103): Dingo\\Api\\Http\\Middleware\\Request->sendRequestThroughRouter(Object(Dingo\\Api\\Http\\Request))",
-            "#36 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(149): Dingo\\Api\\Http\\Middleware\\Request->handle(Object(Dingo\\Api\\Http\\Request), Object(Closure))",
-            "#37 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Pipeline.php(53): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))",
-            "#38 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(102): Illuminate\\Routing\\Pipeline->Illuminate\\Routing\\{closure}(Object(Illuminate\\Http\\Request))",
-            "#39 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(151): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))",
-            "#40 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(116): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))",
-            "#41 C:\\wamp64\\www\\dingo_tutorial\\vendor\\mpociot\\laravel-apidoc-generator\\src\\Tools\\ResponseStrategies\\ResponseCallStrategy.php(276): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))",
-            "#42 C:\\wamp64\\www\\dingo_tutorial\\vendor\\mpociot\\laravel-apidoc-generator\\src\\Tools\\ResponseStrategies\\ResponseCallStrategy.php(260): Mpociot\\ApiDoc\\Tools\\ResponseStrategies\\ResponseCallStrategy->callLaravelRoute(Object(Illuminate\\Http\\Request))",
-            "#43 C:\\wamp64\\www\\dingo_tutorial\\vendor\\mpociot\\laravel-apidoc-generator\\src\\Tools\\ResponseStrategies\\ResponseCallStrategy.php(36): Mpociot\\ApiDoc\\Tools\\ResponseStrategies\\ResponseCallStrategy->makeApiCall(Object(Illuminate\\Http\\Request))",
-            "#44 C:\\wamp64\\www\\dingo_tutorial\\vendor\\mpociot\\laravel-apidoc-generator\\src\\Tools\\ResponseResolver.php(49): Mpociot\\ApiDoc\\Tools\\ResponseStrategies\\ResponseCallStrategy->__invoke(Object(Dingo\\Api\\Routing\\Route), Array, Array)",
-            "#45 C:\\wamp64\\www\\dingo_tutorial\\vendor\\mpociot\\laravel-apidoc-generator\\src\\Tools\\ResponseResolver.php(68): Mpociot\\ApiDoc\\Tools\\ResponseResolver->resolve(Array, Array)",
-            "#46 C:\\wamp64\\www\\dingo_tutorial\\vendor\\mpociot\\laravel-apidoc-generator\\src\\Tools\\Generator.php(57): Mpociot\\ApiDoc\\Tools\\ResponseResolver::getResponse(Object(Dingo\\Api\\Routing\\Route), Array, Array)",
-            "#47 C:\\wamp64\\www\\dingo_tutorial\\vendor\\mpociot\\laravel-apidoc-generator\\src\\Commands\\GenerateDocumentation.php(201): Mpociot\\ApiDoc\\Tools\\Generator->processRoute(Object(Dingo\\Api\\Routing\\Route), Array)",
-            "#48 C:\\wamp64\\www\\dingo_tutorial\\vendor\\mpociot\\laravel-apidoc-generator\\src\\Commands\\GenerateDocumentation.php(59): Mpociot\\ApiDoc\\Commands\\GenerateDocumentation->processRoutes(Object(Mpociot\\ApiDoc\\Tools\\Generator), Array)",
-            "#49 [internal function]: Mpociot\\ApiDoc\\Commands\\GenerateDocumentation->handle()",
-            "#50 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(29): call_user_func_array(Array, Array)",
-            "#51 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(87): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()",
-            "#52 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(31): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))",
-            "#53 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(549): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)",
-            "#54 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(183): Illuminate\\Container\\Container->call(Array)",
-            "#55 C:\\wamp64\\www\\dingo_tutorial\\vendor\\symfony\\console\\Command\\Command.php(255): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))",
-            "#56 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(170): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))",
-            "#57 C:\\wamp64\\www\\dingo_tutorial\\vendor\\symfony\\console\\Application.php(960): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))",
-            "#58 C:\\wamp64\\www\\dingo_tutorial\\vendor\\symfony\\console\\Application.php(255): Symfony\\Component\\Console\\Application->doRunCommand(Object(Mpociot\\ApiDoc\\Commands\\GenerateDocumentation), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))",
-            "#59 C:\\wamp64\\www\\dingo_tutorial\\vendor\\symfony\\console\\Application.php(148): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))",
-            "#60 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Application.php(88): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))",
-            "#61 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(121): Illuminate\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))",
-            "#62 C:\\wamp64\\www\\dingo_tutorial\\artisan(37): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))",
-            "#63 {main}"
-        ]
-    }
+    "data": [
+        {
+            "id": 1,
+            "city_id": 1,
+            "city_name": "London",
+            "temp_celsius": null,
+            "status": "Haze",
+            "measurement_time": "2019-04-07 22:57:22",
+            "provider": "openweathermap.org",
+            "created_at": {
+                "date": "2019-04-07 22:58:54.000000",
+                "timezone_type": 3,
+                "timezone": "UTC"
+            }
+        },
+        {
+            "id": 4,
+            "city_id": 1,
+            "city_name": "London",
+            "temp_celsius": null,
+            "status": "Mist",
+            "measurement_time": "2019-04-07 22:45:12",
+            "provider": "apixu.com",
+            "created_at": {
+                "date": "2019-04-07 22:58:56.000000",
+                "timezone_type": 3,
+                "timezone": "UTC"
+            }
+        }
+    ]
 }
 ```
 
@@ -457,6 +524,14 @@ fetch(url, {
 <!-- START_105ec9a65e7bc0a1aeccf3057b069abb -->
 ## Store a newly created resource in storage.
 
+> Parametros necessários:
+
+```Params
+name {String}
+password {String}
+email {String}
+```
+
 > Example request:
 
 ```bash
@@ -488,6 +563,12 @@ fetch(url, {
 
 <!-- START_185d8dd11617f7199ad63b2137aa37fb -->
 ## Display the specified resource.
+
+> Parametros necessários:
+
+```Params
+id {Int} User Id
+```
 
 > Example request:
 
@@ -535,6 +616,14 @@ fetch(url, {
 <!-- START_f274972870e4b957c00965c5d2c7e7bc -->
 ## Update the specified resource in storage.
 
+> Parametros necessários:
+
+```bash
+name {String}
+email {String}
+password {String} [Opcional]
+```
+
 > Example request:
 
 ```bash
@@ -569,6 +658,12 @@ fetch(url, {
 <!-- START_ccafd5a881df2ccf542ad8b0709f6fb6 -->
 ## Remove the specified resource from storage.
 
+> Parametros necessários:
+
+```Parametros
+id {Int} User id
+```
+
 > Example request:
 
 ```bash
@@ -600,6 +695,15 @@ fetch(url, {
 
 <!-- START_7ba029714012cd9c08cc50ae4dee9d7a -->
 ## /api/auth/login
+
+> Parametros necessários:
+
+```bash
+email {String}
+password {String}
+
+```
+
 > Example request:
 
 ```bash
@@ -693,6 +797,15 @@ fetch(url, {
 
 <!-- START_e94e24496b4ec2effc15bcf93e8e068e -->
 ## /api/auth/register
+
+> Parametros necessários:
+
+```Parametros
+name {String} User name
+email {String} User e-mail
+password {String} User password
+```
+
 > Example request:
 
 ```bash
@@ -724,6 +837,13 @@ fetch(url, {
 
 <!-- START_c687e1b0525abc7141677bd20ed6c30a -->
 ## /api/auth/user
+
+> Parametros necessários:
+
+```Parametros
+token {String} Token de um User com Role root
+```
+
 > Example request:
 
 ```bash
@@ -746,79 +866,21 @@ fetch(url, {
     .then(json => console.log(json));
 ```
 
-> Example response (401):
+> Example response (200):
 
 ```json
 {
-    "message": "Failed to authenticate because of bad credentials or an invalid authorization header.",
-    "status_code": 401,
-    "debug": {
-        "line": 113,
-        "file": "C:\\wamp64\\www\\dingo_tutorial\\vendor\\dingo\\api\\src\\Auth\\Auth.php",
-        "class": "Symfony\\Component\\HttpKernel\\Exception\\UnauthorizedHttpException",
-        "trace": [
-            "#0 C:\\wamp64\\www\\dingo_tutorial\\vendor\\dingo\\api\\src\\Auth\\Auth.php(96): Dingo\\Api\\Auth\\Auth->throwUnauthorizedException(Array)",
-            "#1 C:\\wamp64\\www\\dingo_tutorial\\vendor\\dingo\\api\\src\\Http\\Middleware\\Auth.php(52): Dingo\\Api\\Auth\\Auth->authenticate(Array)",
-            "#2 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(149): Dingo\\Api\\Http\\Middleware\\Auth->handle(Object(Dingo\\Api\\Http\\Request), Object(Closure))",
-            "#3 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Pipeline.php(53): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Dingo\\Api\\Http\\Request))",
-            "#4 C:\\wamp64\\www\\dingo_tutorial\\vendor\\dingo\\api\\src\\Http\\Middleware\\PrepareController.php(45): Illuminate\\Routing\\Pipeline->Illuminate\\Routing\\{closure}(Object(Dingo\\Api\\Http\\Request))",
-            "#5 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(149): Dingo\\Api\\Http\\Middleware\\PrepareController->handle(Object(Dingo\\Api\\Http\\Request), Object(Closure))",
-            "#6 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Pipeline.php(53): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Dingo\\Api\\Http\\Request))",
-            "#7 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(102): Illuminate\\Routing\\Pipeline->Illuminate\\Routing\\{closure}(Object(Dingo\\Api\\Http\\Request))",
-            "#8 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(660): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))",
-            "#9 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(635): Illuminate\\Routing\\Router->runRouteWithinStack(Object(Illuminate\\Routing\\Route), Object(Dingo\\Api\\Http\\Request))",
-            "#10 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(601): Illuminate\\Routing\\Router->runRoute(Object(Dingo\\Api\\Http\\Request), Object(Illuminate\\Routing\\Route))",
-            "#11 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Router.php(590): Illuminate\\Routing\\Router->dispatchToRoute(Object(Dingo\\Api\\Http\\Request))",
-            "#12 C:\\wamp64\\www\\dingo_tutorial\\vendor\\dingo\\api\\src\\Routing\\Adapter\\Laravel.php(88): Illuminate\\Routing\\Router->dispatch(Object(Dingo\\Api\\Http\\Request))",
-            "#13 C:\\wamp64\\www\\dingo_tutorial\\vendor\\dingo\\api\\src\\Routing\\Router.php(514): Dingo\\Api\\Routing\\Adapter\\Laravel->dispatch(Object(Dingo\\Api\\Http\\Request), 'v1')",
-            "#14 C:\\wamp64\\www\\dingo_tutorial\\vendor\\dingo\\api\\src\\Http\\Middleware\\Request.php(126): Dingo\\Api\\Routing\\Router->dispatch(Object(Dingo\\Api\\Http\\Request))",
-            "#15 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(114): Dingo\\Api\\Http\\Middleware\\Request->Dingo\\Api\\Http\\Middleware\\{closure}(Object(Dingo\\Api\\Http\\Request))",
-            "#16 C:\\wamp64\\www\\dingo_tutorial\\vendor\\fideloper\\proxy\\src\\TrustProxies.php(56): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Dingo\\Api\\Http\\Request))",
-            "#17 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(149): Fideloper\\Proxy\\TrustProxies->handle(Object(Dingo\\Api\\Http\\Request), Object(Closure))",
-            "#18 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(30): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Dingo\\Api\\Http\\Request))",
-            "#19 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(149): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Dingo\\Api\\Http\\Request), Object(Closure))",
-            "#20 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest.php(30): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Dingo\\Api\\Http\\Request))",
-            "#21 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(149): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle(Object(Dingo\\Api\\Http\\Request), Object(Closure))",
-            "#22 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Dingo\\Api\\Http\\Request))",
-            "#23 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(149): Illuminate\\Foundation\\Http\\Middleware\\ValidatePostSize->handle(Object(Dingo\\Api\\Http\\Request), Object(Closure))",
-            "#24 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\CheckForMaintenanceMode.php(46): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Dingo\\Api\\Http\\Request))",
-            "#25 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(149): Illuminate\\Foundation\\Http\\Middleware\\CheckForMaintenanceMode->handle(Object(Dingo\\Api\\Http\\Request), Object(Closure))",
-            "#26 C:\\wamp64\\www\\dingo_tutorial\\vendor\\barryvdh\\laravel-cors\\src\\HandlePreflight.php(29): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Dingo\\Api\\Http\\Request))",
-            "#27 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(149): Barryvdh\\Cors\\HandlePreflight->handle(Object(Dingo\\Api\\Http\\Request), Object(Closure))",
-            "#28 C:\\wamp64\\www\\dingo_tutorial\\vendor\\barryvdh\\laravel-cors\\src\\HandleCors.php(36): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Dingo\\Api\\Http\\Request))",
-            "#29 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(149): Barryvdh\\Cors\\HandleCors->handle(Object(Dingo\\Api\\Http\\Request), Object(Closure))",
-            "#30 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(102): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Dingo\\Api\\Http\\Request))",
-            "#31 C:\\wamp64\\www\\dingo_tutorial\\vendor\\dingo\\api\\src\\Http\\Middleware\\Request.php(127): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))",
-            "#32 C:\\wamp64\\www\\dingo_tutorial\\vendor\\dingo\\api\\src\\Http\\Middleware\\Request.php(103): Dingo\\Api\\Http\\Middleware\\Request->sendRequestThroughRouter(Object(Dingo\\Api\\Http\\Request))",
-            "#33 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(149): Dingo\\Api\\Http\\Middleware\\Request->handle(Object(Dingo\\Api\\Http\\Request), Object(Closure))",
-            "#34 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Pipeline.php(53): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))",
-            "#35 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(102): Illuminate\\Routing\\Pipeline->Illuminate\\Routing\\{closure}(Object(Illuminate\\Http\\Request))",
-            "#36 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(151): Illuminate\\Pipeline\\Pipeline->then(Object(Closure))",
-            "#37 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Kernel.php(116): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter(Object(Illuminate\\Http\\Request))",
-            "#38 C:\\wamp64\\www\\dingo_tutorial\\vendor\\mpociot\\laravel-apidoc-generator\\src\\Tools\\ResponseStrategies\\ResponseCallStrategy.php(276): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))",
-            "#39 C:\\wamp64\\www\\dingo_tutorial\\vendor\\mpociot\\laravel-apidoc-generator\\src\\Tools\\ResponseStrategies\\ResponseCallStrategy.php(260): Mpociot\\ApiDoc\\Tools\\ResponseStrategies\\ResponseCallStrategy->callLaravelRoute(Object(Illuminate\\Http\\Request))",
-            "#40 C:\\wamp64\\www\\dingo_tutorial\\vendor\\mpociot\\laravel-apidoc-generator\\src\\Tools\\ResponseStrategies\\ResponseCallStrategy.php(36): Mpociot\\ApiDoc\\Tools\\ResponseStrategies\\ResponseCallStrategy->makeApiCall(Object(Illuminate\\Http\\Request))",
-            "#41 C:\\wamp64\\www\\dingo_tutorial\\vendor\\mpociot\\laravel-apidoc-generator\\src\\Tools\\ResponseResolver.php(49): Mpociot\\ApiDoc\\Tools\\ResponseStrategies\\ResponseCallStrategy->__invoke(Object(Dingo\\Api\\Routing\\Route), Array, Array)",
-            "#42 C:\\wamp64\\www\\dingo_tutorial\\vendor\\mpociot\\laravel-apidoc-generator\\src\\Tools\\ResponseResolver.php(68): Mpociot\\ApiDoc\\Tools\\ResponseResolver->resolve(Array, Array)",
-            "#43 C:\\wamp64\\www\\dingo_tutorial\\vendor\\mpociot\\laravel-apidoc-generator\\src\\Tools\\Generator.php(57): Mpociot\\ApiDoc\\Tools\\ResponseResolver::getResponse(Object(Dingo\\Api\\Routing\\Route), Array, Array)",
-            "#44 C:\\wamp64\\www\\dingo_tutorial\\vendor\\mpociot\\laravel-apidoc-generator\\src\\Commands\\GenerateDocumentation.php(201): Mpociot\\ApiDoc\\Tools\\Generator->processRoute(Object(Dingo\\Api\\Routing\\Route), Array)",
-            "#45 C:\\wamp64\\www\\dingo_tutorial\\vendor\\mpociot\\laravel-apidoc-generator\\src\\Commands\\GenerateDocumentation.php(59): Mpociot\\ApiDoc\\Commands\\GenerateDocumentation->processRoutes(Object(Mpociot\\ApiDoc\\Tools\\Generator), Array)",
-            "#46 [internal function]: Mpociot\\ApiDoc\\Commands\\GenerateDocumentation->handle()",
-            "#47 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(29): call_user_func_array(Array, Array)",
-            "#48 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(87): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()",
-            "#49 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(31): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))",
-            "#50 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(549): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)",
-            "#51 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(183): Illuminate\\Container\\Container->call(Array)",
-            "#52 C:\\wamp64\\www\\dingo_tutorial\\vendor\\symfony\\console\\Command\\Command.php(255): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))",
-            "#53 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(170): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))",
-            "#54 C:\\wamp64\\www\\dingo_tutorial\\vendor\\symfony\\console\\Application.php(960): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))",
-            "#55 C:\\wamp64\\www\\dingo_tutorial\\vendor\\symfony\\console\\Application.php(255): Symfony\\Component\\Console\\Application->doRunCommand(Object(Mpociot\\ApiDoc\\Commands\\GenerateDocumentation), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))",
-            "#56 C:\\wamp64\\www\\dingo_tutorial\\vendor\\symfony\\console\\Application.php(148): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))",
-            "#57 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Application.php(88): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))",
-            "#58 C:\\wamp64\\www\\dingo_tutorial\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(121): Illuminate\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))",
-            "#59 C:\\wamp64\\www\\dingo_tutorial\\artisan(37): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))",
-            "#60 {main}"
-        ]
+    "data": {
+        "id": 51,
+        "name": "Heber Bogan",
+        "email": "admin@example.com",
+        "roles": {
+            "data": [
+                {
+                    "name": "root"
+                }
+            ]
+        }
     }
 }
 ```
