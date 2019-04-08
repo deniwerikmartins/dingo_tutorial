@@ -23,10 +23,17 @@ class UserUpdateRequest extends FormRequest
      */
     public function rules()
     {
+
+        /*return [
+            'name' => 'required|string|max:191',
+            'email' => 'required|email|max:191|unique:users,email,' . $this->user . ',id',
+            'password' => 'required|string|min:6|max:191',
+        ];*/
+
         return [
             'name' => 'required|string|max:191',
+            'email' => 'required|email|max:191|unique:users,email,' . $this->user . ',id',
             'password' => 'sometimes|nullable|string|max:191',
-            'email' => 'required|email|max:191|unique:users,' . $this->user . ',id',
         ];
     }
 }

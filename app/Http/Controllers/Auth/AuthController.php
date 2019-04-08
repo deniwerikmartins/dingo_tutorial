@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Services\UserService;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
+use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\JWTAuth;
 
 class AuthController extends Controller
@@ -33,12 +34,22 @@ class AuthController extends Controller
         
         return $this->success([
            'token' => $token,
+            //'parseToken' => $this->authService->refresh(),
         ]);
 
     }
 
     public function refreshToken() {
-        return $this->authService->parseToken()->refresh();
+
+        try {
+            $token = $this->authService->parseToken()->refresh();
+        } catch (JWTException $e) {
+            throw new UnauthorizedHttpException('jwt-auth', $e->getMessage(), $e, $e->getCode());
+        }
+
+        return $this->response->array([
+            'token' => $token
+        ]);
     }
 
     public function getUser(Request $request){
@@ -55,6 +66,7 @@ class AuthController extends Controller
 
     public function invalidate()
     {
+
         $token = $this->authService->parseToken();
         $token->invalidate();
 

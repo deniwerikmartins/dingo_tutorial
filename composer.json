@@ -65,7 +65,7 @@
         "sort-packages": true,
         "optimize-autoloader": true,
         "github-oauth": {
-            "github.com": "e2ac248cda15bbe31aa37c350f430f84fa6577f5"
+
         }
     },
     "minimum-stability": "dev"

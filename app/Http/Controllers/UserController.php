@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UserCreateRequest;
+use App\Http\Requests\UserUpdateRequest;
 use App\Http\Transformers\UserTransformer;
 use App\Models\User;
 use App\Services\UserService;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Cache;
 
@@ -36,10 +38,6 @@ class UserController extends Controller
 
         $time = 30;
 
-
-
-        //return $users;
-
         $usersCache = Cache::remember($key,$time, function (){
             $users = User::get();
            return $users;
@@ -47,12 +45,10 @@ class UserController extends Controller
 
         return $usersCache;
 
+        /*$users = User::paginate(10);
+        return $this->response->paginator($users, new UserTransformer());*/
 
-
-        //return $this->response->paginator($users, new UserTransformer());
     }
-
-
 
     /**
      * Store a newly created resource in storage.
@@ -89,11 +85,15 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UserCreateRequest $request, $id)
+    public function update(UserUpdateRequest $request, $id)
     {
-        $user = $this->userService->find($id);
+        try {
+            $user = $this->userService->find($id);
+            $user = $this->userService->update($user, $request->all());
+        } catch (ModelNotFoundException $exception) {
+            $this->response->errorNotFound();
+        }
 
-        $user = $this->userService->update($user, $request->all());
 
         return $this->response->item($user, new UserTransformer());
     }
